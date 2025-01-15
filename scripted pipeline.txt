@@ -1,0 +1,32 @@
+pipeline { 
+    agent any 
+    tools { 
+        maven 'MAVEN_HOME' 
+    } 
+    stages { 
+        stage('git repo & clean') { 
+            steps { 
+                bat """ 
+                if exist mavanjava rmdir /s /q mavanjava
+                git clone https://github.com/srisai25/mavanjava.git 
+                mvn clean -f mavanjava 
+                """ 
+            } 
+        } 
+        stage('install') { 
+            steps { 
+                bat "mvn install -f mavanjava" 
+            } 
+        } 
+        stage('test') { 
+            steps { 
+                bat "mvn test -f mavanjava" 
+            } 
+        } 
+        stage('package') { 
+            steps { 
+                bat "mvn package -f mavanjava" 
+            } 
+        } 
+    } 
+}
